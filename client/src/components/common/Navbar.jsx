@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, Menu, X, ArrowRight, BookOpen, Layers, Trophy, Sparkles } from 'lucide-react';
+import { Sprout, Menu, X, ArrowRight, BookOpen, Layers, Trophy, Sparkles, Sun, Moon } from 'lucide-react';
 import { Button } from './Button';
+import { useTheme } from '../../context/useTheme';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isDark, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,22 +32,22 @@ export const Navbar = () => {
   const navLinks = [
     { label: 'Courses', to: '/courses', icon: BookOpen },
     { label: 'Simulator', to: '/simulator', icon: Layers },
-    { label: 'The 5 Crops', href: '#crops', icon: Sprout },
-    { label: 'How It Works', href: '#how-it-works', icon: Sparkles },
+    { label: 'The 5 Crops', targetHash: '#crops', icon: Sprout },
+    { label: 'How It Works', targetHash: '#how-it-works', icon: Sparkles },
     { label: 'Leaderboard', to: '/leaderboard', icon: Trophy },
   ];
 
-  const handleNavClick = (e, href) => {
+  const handleNavClick = (e, targetHash) => {
     setMobileMenuOpen(false);
-    if (href.startsWith('#')) {
-      if (location.pathname !== '/') {
-        return;
-      }
-      e.preventDefault();
-      const target = document.querySelector(href);
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const target = document.querySelector(targetHash);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
       }
+    } else {
+      // Navigate to home with hash
+      navigate('/' + targetHash);
     }
   };
 
@@ -88,8 +91,8 @@ export const Navbar = () => {
               ) : (
                 <a
                   key={item.label}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
+                  href={`/${item.targetHash}`}
+                  onClick={(e) => handleNavClick(e, item.targetHash)}
                   className="px-3.5 py-2 text-sm font-semibold text-gray-700 hover:text-[#0E2A1E] hover:bg-[#143D2B]/5 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]"
                 >
                   {item.label}
@@ -98,8 +101,23 @@ export const Navbar = () => {
             ))}
           </nav>
 
-          {/* Desktop Auth CTAs */}
+          {/* Desktop Actions & Theme Toggle */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Dark / Light Mode Toggle Button */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="p-2 rounded-xl text-gray-700 hover:text-[#0E2A1E] hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+            >
+              {isDark ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
+
             <Link to="/login">
               <Button variant="ghost" size="sm">
                 Sign In
@@ -112,16 +130,31 @@ export const Navbar = () => {
             </Link>
           </div>
 
-          {/* Mobile Hamburger Toggle Button */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-xl text-gray-700 hover:text-[#0E2A1E] hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981] cursor-pointer"
-            aria-expanded={mobileMenuOpen}
-            aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Right Controls: Theme Toggle & Hamburger */}
+          <div className="md:hidden flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="p-2 rounded-xl text-gray-700 hover:text-[#0E2A1E] hover:bg-gray-100 transition-colors cursor-pointer"
+            >
+              {isDark ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-xl text-gray-700 hover:text-[#0E2A1E] hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981] cursor-pointer"
+              aria-expanded={mobileMenuOpen}
+              aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -151,8 +184,8 @@ export const Navbar = () => {
                 ) : (
                   <a
                     key={item.label}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
+                    href={`/${item.targetHash}`}
+                    onClick={(e) => handleNavClick(e, item.targetHash)}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-800 hover:bg-[#F0FDF4] hover:text-[#0E2A1E] transition-colors"
                   >
                     <IconComponent className="w-4 h-4 text-[#10B981]" />

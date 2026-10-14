@@ -10,13 +10,26 @@ import { CourseDetailsPage } from './pages/courses/CourseDetailsPage';
 import { LessonViewerPage } from './pages/courses/LessonViewerPage';
 import { QuizPage } from './pages/courses/QuizPage';
 import { FarmSimulatorPage } from './pages/simulator/FarmSimulatorPage';
+import { LeaderboardPage } from './pages/leaderboard/LeaderboardPage';
+import { ThemeProvider } from './context/ThemeContext';
 
-// Scroll-to-top handler on route changes
+// Scroll-to-top handler on route changes with hash navigation support
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (!hash) {
+    if (hash) {
+      const target = document.querySelector(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        const timer = setTimeout(() => {
+          const el = document.querySelector(hash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    } else {
       window.scrollTo(0, 0);
     }
   }, [pathname, hash]);
@@ -26,33 +39,26 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-[#FBFBF9] text-[#1A221D]">
-        <Navbar />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            
-            {/* Interactive Learning Management Routes (SRS LEARN-REQ-01 to 07) */}
-            <Route path="/courses" element={<CourseCatalogPage />} />
-            <Route path="/courses/:id" element={<CourseDetailsPage />} />
-            <Route path="/courses/:id/lessons/:lessonId" element={<LessonViewerPage />} />
-            <Route path="/courses/:id/quiz" element={<QuizPage />} />
+    <ThemeProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="min-h-screen flex flex-col bg-[#FBFBF9] dark:bg-[#0B1510] text-[#1A221D] dark:text-[#E5EAE6] transition-colors duration-200">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              
+              {/* Interactive Learning Management Routes (SRS LEARN-REQ-01 to 07) */}
+              <Route path="/courses" element={<CourseCatalogPage />} />
+              <Route path="/courses/:id" element={<CourseDetailsPage />} />
+              <Route path="/courses/:id/lessons/:lessonId" element={<LessonViewerPage />} />
+              <Route path="/courses/:id/quiz" element={<QuizPage />} />
 
-            {/* Interactive 2D Farm Simulator Studio (SRS SIM-REQ-01 to 12) */}
-            <Route path="/simulator" element={<FarmSimulatorPage />} />
-            <Route
-              path="/leaderboard"
-              element={
-                <PlaceholderPage
-                  title="Academic Leaderboard"
-                  moduleName="Gamification"
-                  step="Phase 1 • Step 5"
-                  description="Global XP rankings, course completion streaks, and sustainability achievement badges will populate here."
-                />
-              }
-            />
+              {/* Interactive 2D Farm Simulator Studio (SRS SIM-REQ-01 to 12) */}
+              <Route path="/simulator" element={<FarmSimulatorPage />} />
+
+              {/* Academic Leaderboard & Gamification (SRS GAME-REQ-01 to 06) */}
+              <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route
               path="/login"
               element={
@@ -92,5 +98,6 @@ export default function App() {
         <Footer />
       </div>
     </BrowserRouter>
+  </ThemeProvider>
   );
 }
