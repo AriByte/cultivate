@@ -28,7 +28,7 @@ export const Navbar = () => {
 
   const navLinks = [
     { label: 'Courses', to: '/courses', icon: BookOpen },
-    { label: 'Simulator', href: '#simulator', icon: Layers },
+    { label: 'Simulator', to: '/simulator', icon: Layers },
     { label: 'The 5 Crops', href: '#crops', icon: Sprout },
     { label: 'How It Works', href: '#how-it-works', icon: Sparkles },
     { label: 'Leaderboard', to: '/leaderboard', icon: Trophy },

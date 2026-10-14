@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, DollarSign, Calendar, RefreshCw, Check, Sun } from 'lucide-react';
+import { Sprout, DollarSign, Calendar, RefreshCw, Check, Sun, ArrowRight } from 'lucide-react';
 import { SectionHeading } from '../../components/common/SectionHeading';
 import { Button } from '../../components/common/Button';
 
@@ -307,6 +308,18 @@ export const SimulatorPreviewSection = () => {
 
             </div>
 
+          </div>
+
+          {/* Bottom Bar: Launch Full Studio CTA */}
+          <div className="bg-[#FAFBF9] border-t border-[#E5EAE5] px-5 sm:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <span className="text-gray-600 font-medium text-center sm:text-left">
+              Ready to manage all 12 field plots, diverse crop rotations, and companion intercropping?
+            </span>
+            <Link to="/simulator">
+              <Button variant="primary" size="sm" icon={ArrowRight} iconPosition="right" className="shadow-xs font-bold shrink-0">
+                Open Full Farm Simulator Studio
+              </Button>
+            </Link>
           </div>
 
           {/* Interactive Floating Notification */}

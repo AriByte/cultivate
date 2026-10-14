@@ -9,6 +9,7 @@ import { CourseCatalogPage } from './pages/courses/CourseCatalogPage';
 import { CourseDetailsPage } from './pages/courses/CourseDetailsPage';
 import { LessonViewerPage } from './pages/courses/LessonViewerPage';
 import { QuizPage } from './pages/courses/QuizPage';
+import { FarmSimulatorPage } from './pages/simulator/FarmSimulatorPage';
 
 // Scroll-to-top handler on route changes
 function ScrollToTop() {
@@ -39,17 +40,8 @@ export default function App() {
             <Route path="/courses/:id/lessons/:lessonId" element={<LessonViewerPage />} />
             <Route path="/courses/:id/quiz" element={<QuizPage />} />
 
-            <Route
-              path="/simulator"
-              element={
-                <PlaceholderPage
-                  title="2D Farm Simulator Studio"
-                  moduleName="Simulation"
-                  step="Phase 1 • Step 4"
-                  description="The full multi-day virtual farm setup with 5x5 crop plots, dynamic pest events, and harvest calculations is scheduled in Step 4. You can test the interactive mini-engine on the home page."
-                />
-              }
-            />
+            {/* Interactive 2D Farm Simulator Studio (SRS SIM-REQ-01 to 12) */}
+            <Route path="/simulator" element={<FarmSimulatorPage />} />
             <Route
               path="/leaderboard"
               element={
